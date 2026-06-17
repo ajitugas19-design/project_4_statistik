@@ -2,7 +2,8 @@
 // Semua logika PHP dijalankan SEBELUM output HTML apapun
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-$conn = mysqli_connect("localhost","root","","presentase");
+require_once __DIR__ . '/config.php';
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if (!$conn) die("Koneksi database gagal: " . mysqli_connect_error());
  
 /* LOGIN ADMIN */
@@ -43,7 +44,8 @@ if (isset($_POST['simpan'])) {
   $data = ["jenis_kelamin"=>$jk_num,"usia"=>$usia,"harga"=>$harga,"desain"=>$desain,"kenyamanan"=>$kenyamanan,"durasi_tidur"=>$durasi_tidur];
 
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, "http://localhost:5000/predict");
+  curl_setopt($ch, CURLOPT_URL, FLASK_URL);
+  curl_setopt($ch, CURLOPT_TIMEOUT, CURL_TIMEOUT);
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
   curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);

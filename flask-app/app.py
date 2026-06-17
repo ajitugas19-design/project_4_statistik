@@ -23,8 +23,8 @@ rf_model  = rf_data["model"]
 gb_model  = gb_data["model"]
 nb_model  = nb_data["model"]
 
-kmeans_model   = kmeans_data["model"]
-kmeans_scaler  = kmeans_data["scaler"]
+kmeans_model        = kmeans_data["model"]
+kmeans_scaler       = kmeans_data["scaler"]
 cluster_premium     = kmeans_data["cluster_premium"]
 cluster_non_premium = kmeans_data["cluster_non_premium"]
 
@@ -45,7 +45,7 @@ def predict():
         return jsonify({"error": f"Field tidak lengkap: {missing}"}), 400
 
     fitur = np.array([[
-        int(data['jenis_kelamin']),   # 0 = L, 1 = P
+        int(data['jenis_kelamin']),
         int(data['usia']),
         int(data['harga']),
         int(data['desain']),
@@ -53,35 +53,33 @@ def predict():
         int(data['durasi_tidur'])
     ]])
 
-    # Prediksi klasifikasi (RF, GB, NB)
     rf_pred = int(rf_model.predict(fitur)[0])
     gb_pred = int(gb_model.predict(fitur)[0])
     nb_pred = int(nb_model.predict(fitur)[0])
 
-    # Prediksi KMeans — harus di-scale dulu, lalu mapping ke label yang benar
     fitur_scaled = kmeans_scaler.transform(fitur)
     raw_cluster  = int(kmeans_model.predict(fitur_scaled)[0])
     kmeans_label = "Premium" if raw_cluster == cluster_premium else "Non-Premium"
 
-    # Hitung kesimpulan dari voting 3 model klasifikasi
-    votes_premium = rf_pred + gb_pred + nb_pred  # jumlah model yang bilang premium
+    votes_premium = rf_pred + gb_pred + nb_pred
     if votes_premium >= 2:
         kesimpulan = "Menyukai Produk Premium"
     else:
         kesimpulan = "Tidak Menyukai Produk Premium"
 
     hasil = {
-        "random_forest":       rf_pred,           # 0 atau 1
-        "gradient_boosting":   gb_pred,           # 0 atau 1
-        "naive_bayes":         nb_pred,           # 0 atau 1
-        "kmeans_cluster":      raw_cluster,       # nomor cluster (0 atau 1)
-        "kmeans_label":        kmeans_label,      # "Premium" / "Non-Premium"
-        "votes_premium":       votes_premium,     # berapa model yang bilang premium (0-3)
-        "kesimpulan":          kesimpulan
+        "random_forest":     rf_pred,
+        "gradient_boosting": gb_pred,
+        "naive_bayes":       nb_pred,
+        "kmeans_cluster":    raw_cluster,
+        "kmeans_label":      kmeans_label,
+        "votes_premium":     votes_premium,
+        "kesimpulan":        kesimpulan
     }
 
     return jsonify(hasil)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
