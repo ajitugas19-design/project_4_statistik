@@ -60,7 +60,7 @@ if (isset($_POST['simpan'])) {
     $nb_pred = isset($hasil['naive_bayes'])        ? (int)$hasil['naive_bayes']        : null;
     $km_pred = isset($hasil['kmeans_cluster'])     ? (int)$hasil['kmeans_cluster']     : null;
 
-    $toText = fn($v) => ((int)$v === 1) ? 'Menyukai Produk Premium' : 'Tidak Menyukai Premium';
+    $toText = fn($v) => ((int)$v === 1) ? 'Menyukai produk premium ' : 'menyukai kenyamanan';
     $toIcon = fn($v) => ((int)$v === 1) ? 'positive' : 'negative';
 
     $rf_text      = ($rf_pred === null) ? 'Tidak tersedia' : $toText($rf_pred);
@@ -69,18 +69,18 @@ if (isset($_POST['simpan'])) {
     $gb_status    = ($gb_pred === null) ? '' : $toIcon($gb_pred);
     $nb_text      = ($nb_pred === null) ? 'Tidak tersedia' : $toText($nb_pred);
     $nb_status    = ($nb_pred === null) ? '' : $toIcon($nb_pred);
-    $cluster_text = ($km_pred === null) ? 'Tidak tersedia' : (($km_pred === 1) ? 'Cluster Premium' : 'Cluster Non-Premium');
+    $cluster_text = ($km_pred === null) ? 'Tidak tersedia' : (($km_pred === 1) ? 'menyukai Premium' : 'menyukai Kenyamanan');
     $cluster_status = ($km_pred === null) ? '' : (($km_pred === 1) ? 'positive' : 'negative');
 
     $votes = (int)($rf_pred===1) + (int)($gb_pred===1) + (int)($nb_pred===1);
     $kesimpulan_status = ($votes >= 2) ? 'positive' : 'negative';
 
     $is_premium = ($votes >= 2);
-    $kesimpulan_label = $is_premium ? 'Menyukai Produk Premium' : 'Tidak Menyukai Produk Premium';
+    $kesimpulan_label = $is_premium ? 'Menyukai Produk Premium' : 'Menyukai Kenyamanan';
 
     $kesimpulan = $is_premium
-      ? "Mayoritas model ({$votes}/3) menunjukkan pelanggan <strong>menyukai Produk Premium</strong>."
-      : "Mayoritas model menunjukkan pelanggan <strong>tidak menyukai Produk Premium</strong>.";
+      ? "Mayoritas model ({$votes}/3) menunjukkan pelanggan <strong>menyukai produk premium</strong>."
+      : "Mayoritas model menunjukkan pelanggan <strong> menyukai kenyamanan </strong>.";
 
     /* ============================
        INSERT KE DATABASE

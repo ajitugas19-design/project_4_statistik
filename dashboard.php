@@ -551,7 +551,7 @@ td {
       </div>
       <div class="stat-card sc-red">
         <div class="stat-top">
-          <div class="stat-label">Tidak Premium</div>
+          <div class="stat-label">Menyukai kenyamanan</div>
           <div class="stat-icon si-red">❌</div>
         </div>
         <div class="stat-value"><?= $nonpremium['total'] ?></div>
@@ -713,7 +713,7 @@ td {
             </td>
             <td>
               <span class="badge-pill <?= $is_premium ? 'badge-pos' : 'badge-neg' ?>" style="font-size:11.5px;">
-                <?= $is_premium ? '✅ Menyukai Premium' : '❌ Tidak Premium' ?>
+                <?= $is_premium ? ' Menyukai Premium' : ' menyukai kenyamanan' ?>
               </span>
             </td>
           </tr>
@@ -752,7 +752,7 @@ const kmCount  = <?= (int)($model['km'] ?? 0) ?>;
 new Chart(document.getElementById('pieChart'), {
   type: 'doughnut',
   data: {
-    labels: ['Menyukai Premium', 'Tidak Premium'],
+    labels: ['Menyukai Premium', 'menyukai kenyamanan'],
     datasets: [{
       data: [premiumCount, nonPremiumCount],
       backgroundColor: ['#16A34A', '#DC2626'],
